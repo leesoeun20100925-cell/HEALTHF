@@ -1,4 +1,4 @@
-﻿import streamlit as st
+import streamlit as st
 
 # 1. 웹페이지 기본 설정
 st.set_page_config(page_title="청소년 디지털 건강 처방전", page_icon="🩺", layout="wide")
@@ -7,16 +7,19 @@ st.set_page_config(page_title="청소년 디지털 건강 처방전", page_icon=
 if "current_page" not in st.session_state:
     st.session_state.current_page = "🏠 홈화면"
 
+# 🌟 [에러 해결핵심] 페이지를 안전하게 이동시켜주는 함수 정의
+def move_page(page_name):
+    st.session_state.current_page = page_name
+
 # --- 📋 왼쪽 사이드바 ---
 with st.sidebar:
     st.header("📋 시스템 메뉴")
-    if st.button("🏠 처음으로 (홈화면 이동)", use_container_width=True, key="sidebar_home"):
-        st.session_state.current_page = "🏠 홈화면"
-        st.rerun()
+    # 안전한 클릭 함수 적용
+    st.button("🏠 처음으로 (홈화면 이동)", use_container_width=True, key="sidebar_home", on_click=move_page, args=("🏠 홈화면",))
     st.markdown("---")
     st.write("**💡 시스템 안내**")
     st.caption("본 프로그램은 가중치 인공신경망 원리를 활용한 청소년 디지털 건강 진단 서비스입니다.")
-    st.caption("제작자: 1학년 10반 이소은")
+    st.caption("제작자: 고등학교 1학년 [내 이름]")
 
 
 # --- 🏠 [화면 1: 홈화면] ---
@@ -26,32 +29,25 @@ if st.session_state.current_page == "🏠 홈화면":
     st.info("💡 **이용 방법:** 아래에서 진단받고 싶은 카테고리의 **[진단 시작]** 버튼을 클릭하세요.")
     st.markdown("---")
     
-    # 화면 가로 3분할
     col1, col2, col3 = st.columns(3)
     
     with col1:
         st.subheader("💻 VDT 증후군")
         st.caption("거북목 · 일자목 · 손목 통증")
         st.write("스마트폰과 PC의 과도한 사용, 잘못된 자세가 목과 어깨 척추에 미치는 위험도를 정밀 분석합니다.")
-        if st.button("👉 VDT 진단 시작", key="btn_vdt", use_container_width=True):
-            st.session_state.current_page = "💻 VDT 증후군"
-            st.rerun()
+        st.button("👉 VDT 진단 시작", key="btn_vdt", use_container_width=True, on_click=move_page, args=("💻 VDT 증후군",))
             
     with col2:
         st.subheader("😴 수면위상지연")
         st.caption("만성 피로 · 블루라이트 장애")
         st.write("야간 블루라이트 노출과 호르몬 변화로 인한 청소년기 수면 패턴 및 피로도를 점검합니다.")
-        if st.button("👉 수면 진단 시작", key="btn_sleep", use_container_width=True):
-            st.session_state.current_page = "😴 수면위상지연 증후군"
-            st.rerun()
+        st.button("👉 수면 진단 시작", key="btn_sleep", use_container_width=True, on_click=move_page, args=("😴 수면위상지연 증후군",))
             
     with col3:
         st.subheader("🧠 학업 스트레스")
         st.caption("성적 압박 · 가면 우울증")
-        st.write("과도한 학업 압박และ 대인관계 스트레스가 유발하는 청소년 심리적 과부하 상태를 진단합니다.")
-        if st.button("👉 심리 진단 시작", key="btn_stress", use_container_width=True):
-            st.session_state.current_page = "🧠 스트레스 및 가면 우울"
-            st.rerun()
+        st.write("과도한 학업 압박과 대인관계 스트레스가 유발하는 청소년 심리적 과부하 상태를 진단합니다.")
+        st.button("👉 심리 진단 시작", key="btn_stress", use_container_width=True, on_click=move_page, args=("🧠 스트레스 및 가면 우울",))
     st.markdown("---")
 
 
@@ -86,22 +82,15 @@ elif st.session_state.current_page == "💻 VDT 증후군":
         else:
             st.success("✅ [정상] 생체 역학적으로 안전하고 아주 훌륭한 생활 습관을 유지하고 있습니다.")
             
-        # 🌟 [수정] 처방전 결과가 나왔을 때만(if문 안쪽으로 들여씀) 버튼들이 나타납니다.
         st.markdown("---")
         st.write("### 🧭 다음 단계 선택")
         next_col1, next_col2, next_col3 = st.columns(3)
         with next_col1:
-            if st.button("😴 수면 장애 검사해보기", use_container_width=True, key="go_sleep_from_vdt"):
-                st.session_state.current_page = "😴 수면위상지연 증후군"
-                st.rerun()
+            st.button("😴 수면 장애 검사해보기", use_container_width=True, key="go_sleep_from_vdt", on_click=move_page, args=("😴 수면위상지연 증후군",))
         with next_col2:
-            if st.button("🧠 스트레스 검사해보기", use_container_width=True, key="go_stress_from_vdt"):
-                st.session_state.current_page = "🧠 스트레스 및 가면 우울"
-                st.rerun()
+            st.button("🧠 스트레스 검사해보기", use_container_width=True, key="go_stress_from_vdt", on_click=move_page, args=("🧠 스트레스 및 가면 우울",))
         with next_col3:
-            if st.button("🏠 홈 화면으로 돌아가기", use_container_width=True, key="go_home_from_vdt"):
-                st.session_state.current_page = "🏠 홈화면"
-                st.rerun()
+            st.button("🏠 홈 화면으로 돌아가기", use_container_width=True, key="go_home_from_vdt", on_click=move_page, args=("🏠 홈화면",))
 
 
 # --- 😴 [화면 3: 수면 장애] ---
@@ -135,22 +124,15 @@ elif st.session_state.current_page == "😴 수면위상지연 증후군":
         else:
             st.success("✅ [정상] 생체 리듬이 안정적이며 매우 건강한 수면 패턴을 유지하고 있습니다.")
             
-        # 🌟 [수정] 처방전 결과가 나왔을 때만 버튼들이 나타납니다.
         st.markdown("---")
         st.write("### 🧭 다음 단계 선택")
         next_col1, next_col2, next_col3 = st.columns(3)
         with next_col1:
-            if st.button("💻 VDT 증후군 검사해보기", use_container_width=True, key="go_vdt_from_sleep"):
-                st.session_state.current_page = "💻 VDT 증후군"
-                st.rerun()
+            st.button("💻 VDT 증후군 검사해보기", use_container_width=True, key="go_vdt_from_sleep", on_click=move_page, args=("💻 VDT 증후군",))
         with next_col2:
-            if st.button("🧠 스트레스 검사해보기", use_container_width=True, key="go_stress_from_sleep"):
-                st.session_state.current_page = "🧠 스트레스 및 가면 우울"
-                st.rerun()
+            st.button("🧠 스트레스 검사해보기", use_container_width=True, key="go_stress_from_sleep", on_click=move_page, args=("🧠 스트레스 및 가면 우울",))
         with next_col3:
-            if st.button("🏠 홈 화면으로 돌아가기", use_container_width=True, key="go_home_from_sleep"):
-                st.session_state.current_page = "🏠 홈화면"
-                st.rerun()
+            st.button("🏠 홈 화면으로 돌아가기", use_container_width=True, key="go_home_from_sleep", on_click=move_page, args=("🏠 홈화면",))
 
 
 # --- 🧠 [화면 4: 학업 스트레스] ---
@@ -184,3 +166,12 @@ elif st.session_state.current_page == "🧠 스트레스 및 가면 우울":
         else:
             st.success("✅ [정상] 심리적 회복탄력성이 높으며 아주 건강한 정신 건강 상태를 유지하고 있습니다.")
             
+        st.markdown("---")
+        st.write("### 🧭 다음 단계 선택")
+        next_col1, next_col2, next_col3 = st.columns(3)
+        with next_col1:
+            st.button("💻 VDT 증후군 검사해보기", use_container_width=True, key="go_vdt_from_stress", on_click=move_page, args=("💻 VDT 증후군",))
+        with next_col2:
+            st.button("😴 수면 장애 검사해보기", use_container_width=True, key="go_sleep_from_stress", on_click=move_page, args=("😴 수면위상지연 증후군",))
+        with next_col3:
+            st.button("🏠 홈 화면으로 돌아가기", use_container_width=True, key="go_home_from_stress", on_click=move_page, args=("🏠 홈화면",))
