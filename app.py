@@ -19,12 +19,12 @@ with st.sidebar:
     st.markdown("---")
     st.write("**💡 시스템 안내**")
     st.caption("본 프로그램은 가중치 인공신경망 원리를 활용한 청소년 디지털 건강 진단 서비스입니다.")
-    st.caption("제작자: 고등학교 1학년 [내 이름]")
+    st.caption("제작자: 고등학교 1학년 이소은")
 
 
 # --- 🏠 [화면 1: 홈화면] ---
 if st.session_state.current_page == "🏠 홈화면":
-    st.title("🩺 청소년 맞춤형 디지털 건강 문진 시스템")
+    st.title("🩺 청소년 맞춤형 디지털 처방전")
     st.write("학업 스트레스와 전자기기 사용으로 지친 나의 건강 상태를 체크하고 맞춤형 디지털 처방전을 받아보세요!")
     st.info("💡 **이용 방법:** 아래에서 진단받고 싶은 카테고리의 **[진단 시작]** 버튼을 클릭하세요.")
     st.markdown("---")
@@ -34,19 +34,19 @@ if st.session_state.current_page == "🏠 홈화면":
     with col1:
         st.subheader("💻 VDT 증후군")
         st.caption("거북목 · 일자목 · 손목 통증")
-        st.write("스마트폰과 PC의 과도한 사용, 잘못된 자세가 목과 어깨 척추에 미치는 위험도를 정밀 분석합니다.")
+        st.write("스마트폰과 PC의 과도한 사용, 잘못된 자세가 목과 어깨 척추에 미치는 위험도 분석!")
         st.button("👉 VDT 진단 시작", key="btn_vdt", use_container_width=True, on_click=move_page, args=("💻 VDT 증후군",))
             
     with col2:
         st.subheader("😴 수면위상지연")
         st.caption("만성 피로 · 블루라이트 장애")
-        st.write("야간 블루라이트 노출과 호르몬 변화로 인한 청소년기 수면 패턴 및 피로도를 점검합니다.")
+        st.write("야간 블루라이트 노출과 호르몬 변화로 인한 청소년기 수면 패턴 및 피로도를 점검")
         st.button("👉 수면 진단 시작", key="btn_sleep", use_container_width=True, on_click=move_page, args=("😴 수면위상지연 증후군",))
             
     with col3:
         st.subheader("🧠 학업 스트레스")
         st.caption("성적 압박 · 가면 우울증")
-        st.write("과도한 학업 압박과 대인관계 스트레스가 유발하는 청소년 심리적 과부하 상태를 진단합니다.")
+        st.write("과도한 학업 압박과 대인관계 스트레스가 유발하는 청소년 심리적 과부하 상태 진단")
         st.button("👉 심리 진단 시작", key="btn_stress", use_container_width=True, on_click=move_page, args=("🧠 스트레스 및 가면 우울",))
     st.markdown("---")
 
