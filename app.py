@@ -1,5 +1,47 @@
 import streamlit as st
 
+# 🎨 디자인 CSS
+st.markdown("""
+<style>
+
+/* 전체 배경 */
+.stApp{
+    background-color:#F5F9FF;
+}
+
+/* 카드 디자인 */
+.card{
+    background:white;
+    padding:20px;
+    border-radius:20px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.08);
+    margin-bottom:15px;
+}
+
+/* 버튼 디자인 */
+.stButton > button{
+    background:linear-gradient(90deg,#6EA8FF,#3A7BFF);
+    color:white;
+    border:none;
+    border-radius:12px;
+    height:3em;
+    font-weight:bold;
+}
+
+/* 결과 점수 박스 */
+.score-box{
+    background:#EEF4FF;
+    padding:20px;
+    border-radius:15px;
+    text-align:center;
+    font-size:26px;
+    font-weight:bold;
+    color:#3A7BFF;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 # 1. 웹페이지 기본 설정
 st.set_page_config(page_title="청소년 디지털 건강 처방전", page_icon="🩺", layout="wide")
 
