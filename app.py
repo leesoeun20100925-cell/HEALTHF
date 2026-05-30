@@ -1,15 +1,91 @@
 import streamlit as st
 
 # 1. 웹페이지 기본 설정
-st.set_page_config(page_title="청소년 디지털 건강 처방전", page_icon="🩺", layout="wide")
+st.set_page_config(page_title="청소년 디지털 건강 처방전", page_icon="🩺", layout="centered")
 
 # 🎨 디자인 CSS
 st.markdown("""
 <style>
-.stApp{ background-color:#F5F9FF; }
-.card{ background:white; padding:20px; border-radius:20px; box-shadow:0 4px 12px rgba(0,0,0,0.08); margin-bottom:15px; }
-.stButton > button{ background:linear-gradient(90deg,#6EA8FF,#3A7BFF); color:white; border:none; border-radius:12px; height:3em; font-weight:bold; }
-.score-box{ background:#EEF4FF; padding:20px; border-radius:15px; text-align:center; font-size:26px; font-weight:bold; color:#3A7BFF; margin-bottom:20px; }
+
+/* 전체 배경 */
+.stApp{
+    background:#F8FAFC;
+}
+
+/* 카드 */
+.card{
+    background:white;
+    padding:22px;
+    border-radius:18px;
+    border:1px solid #EAECEF;
+    box-shadow:0 2px 8px rgba(0,0,0,0.04);
+    margin-bottom:15px;
+}
+
+/* 버튼 */
+.stButton > button{
+    width:100%;
+    background:#4F8CFF;
+    color:white;
+    border:none;
+    border-radius:12px;
+    height:3em;
+    font-weight:600;
+    box-shadow:0 2px 6px rgba(79,140,255,0.25);
+    transition:0.2s;
+}
+
+/* 버튼 호버 */
+.stButton > button:hover{
+    background:#3B7DFF;
+}
+
+/* 결과 점수 박스 */
+.score-box{
+    background:white;
+    border:1px solid #DCE6F5;
+    padding:24px;
+    border-radius:18px;
+    text-align:center;
+    font-size:26px;
+    font-weight:bold;
+    color:#3A7BFF;
+    margin-bottom:20px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.04);
+}
+
+/* 라디오 버튼 */
+div[role="radiogroup"]{
+    gap:8px;
+}
+
+/* 사이드바 */
+section[data-testid="stSidebar"]{
+    background:#FFFFFF;
+    border-right:1px solid #EAECEF;
+}
+
+/* 제목 */
+h1{
+    font-weight:700;
+}
+
+h2{
+    font-weight:600;
+}
+
+h3{
+    font-weight:600;
+}
+
+/* 구분선 */
+hr{
+    border:none;
+    border-top:1px solid #EAECEF;
+    margin-top:25px;
+    margin-bottom:25px;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
