@@ -6,7 +6,6 @@ st.set_page_config(page_title="청소년 디지털 건강 처방전", page_icon=
 # 🎨 디자인 CSS
 st.markdown("""
 <style>
-
 /* 전체 배경 */
 .stApp{
     background:#F8FAFC;
@@ -66,17 +65,9 @@ section[data-testid="stSidebar"]{
 }
 
 /* 제목 */
-h1{
-    font-weight:700;
-}
-
-h2{
-    font-weight:600;
-}
-
-h3{
-    font-weight:600;
-}
+h1{ font-weight:700; }
+h2{ font-weight:600; }
+h3{ font-weight:600; }
 
 /* 구분선 */
 hr{
@@ -85,18 +76,37 @@ hr{
     margin-top:25px;
     margin-bottom:25px;
 }
-
 </style>
 """, unsafe_allow_html=True)
 
+# 🔄 세션 상태(Session State) 초기화
 if "current_page" not in st.session_state:
     st.session_state.current_page = "🏠 홈화면"
 
+# 진단 결과를 기억하기 위한 변수들 초기화
+if "show_result" not in st.session_state:
+    st.session_state.show_result = False
+if "result_data" not in st.session_state:
+    st.session_state.result_data = {}
+
+# 페이지 이동 함수 (이동할 때 이전 진단 기록을 초기화해줌)
 def move_page(page_name):
     st.session_state.current_page = page_name
+    st.session_state.show_result = False  # 새 페이지로 가면 결과창은 닫기
+    st.session_state.result_data = {}
 
-# 🌟 [코드 축소 핵심] 결과 화면과 하단 버튼을 자동으로 만들어주는 만능 함수
-def render_result(total_y, status, prescription_text, nav_targets):
+# 🌟 결과 화면과 하단 버튼을 자동으로 만들어주는 만능 함수
+def render_result():
+    if not st.session_state.show_result:
+        return
+    
+    # 저장된 결과 데이터 가져오기
+    data = st.session_state.result_data
+    total_y = data["total_y"]
+    status = data["status"]
+    prescription_text = data["prescription_text"]
+    nav_targets = data["nav_targets"]
+
     st.markdown("---")
     st.write("## 📊 AI 정밀 분석 및 디지털 처방전")
     st.markdown(f"<div class='score-box'>📊 종합 위험도 지수<br>{total_y:.2f} / 8.60</div>", unsafe_allow_html=True)
@@ -114,6 +124,7 @@ def render_result(total_y, status, prescription_text, nav_targets):
     cols = st.columns(3)
     for i, (label, page) in enumerate(nav_targets.items()):
         with cols[i]:
+            # 클릭 시 move_page가 발동되도록 설정
             st.button(label, use_container_width=True, key=f"nav_{page}_{i}", on_click=move_page, args=(page,))
 
 # --- 📋 왼쪽 사이드바 ---
@@ -135,7 +146,7 @@ if st.session_state.current_page == "🏠 홈화면":
     cards = [
         ("💻 VDT 증후군", "거북목 · 일자목 · 손목 통증", "스마트폰과 PC 사용 습관으로 인한 자세 위험도를 분석합니다.", "👉 VDT 진단 시작", "💻 VDT 증후군"),
         ("😴 수면위상지연", "만성 피로 · 블루라이트 장애", "청소년 수면 패턴과 피로도를 분석합니다.", "👉 수면 진단 시작", "😴 수면위상지연 증후군"),
-        ("🧠 학업 스트레스", "학업과 대인관계 스트레스를 AI가 분석합니다.", "👉 심리 진단 시작", "🧠 스트레스 및 가면 우울")
+        ("🧠 학업 스트레스", "성적 압박 · 가면 우울증", "학업과 대인관계 스트레스를 AI가 분석합니다.", "👉 심리 진단 시작", "🧠 스트레스 및 가면 우울")
     ]
     cols = st.columns(3)
     for i, (title, sub, desc, btn_txt, page) in enumerate(cards):
@@ -156,7 +167,6 @@ elif st.session_state.current_page == "💻 VDT 증후군":
 
     if st.button("VDT 증후군 AI 정밀 진단", use_container_width=True):
         total_y = (0.8 * ["3시간 미만", "3~6시간", "6시간 이상"].index(q1)) + (1.5 * ["안 그런다", "가끔 그렇다", "자주 그렇다"].index(q2)) + (2.0 * ["통증 없음", "뻐근함", "심한 통증"].index(q3))
-        
         status = "위험" if total_y >= 5.0 else "주의" if total_y >= 2.5 else "정상"
         vdt_text = {
             "위험_title": "VDT 증후군 및 거북목 고위험군 단계입니다.",
@@ -166,7 +176,15 @@ elif st.session_state.current_page == "💻 VDT 증후군":
             "주의": "### 🩺 의학 행동 처방전\n* **📱 스마트폰 올리기:** 고개를 숙이지 말고 눈앞으로 들어 올리세요.\n* **📖 독서대 필수:** 인강이나 책을 볼 때는 반드시 독서대를 쓰세요.",
             "정상": "### 🩺 의학 관리 처방전\n* **🛏️ 경추 베개 사용:** 자는 동안 목 곡선이 유지되는 적절한 높이의 베개를 쓰세요.\n* **🏃 꾸준한 스트레칭:** 척추 주변 근육 강화를 위해 주 2회 스트레칭을 하세요."
         }
-        render_result(total_y, status, vdt_text, {"😴 수면 장애 검사해보기": "😴 수면위상지연 증후군", "🧠 스트레스 검사해보기": "🧠 스트레스 및 가면 우울", "🏠 홈 화면으로 돌아가기": "🏠 홈화면"})
+        # 결과를 세션 상태에 저장하고 활성화
+        st.session_state.result_data = {
+            "total_y": total_y, "status": status, "prescription_text": vdt_text,
+            "nav_targets": {"😴 수면 장애 검사": "😴 수면위상지연 증후군", "🧠 스트레스 검사": "🧠 스트레스 및 가면 우울", "🏠 홈 화면으로": "🏠 홈화면"}
+        }
+        st.session_state.show_result = True
+
+    # 결과 출력 함수 호출
+    render_result()
 
 # --- 😴 수면위상지연 증후군 ---
 elif st.session_state.current_page == "😴 수면위상지연 증후군":
@@ -180,7 +198,6 @@ elif st.session_state.current_page == "😴 수면위상지연 증후군":
 
     if st.button("수면 상태 AI 정밀 진단", use_container_width=True):
         total_y = (1.8 * ["거의 안 본다", "주 2~3회 본다", "매일 본다"].index(q4)) + (1.0 * ["안 그런다", "가끔 그렇다", "항상 그렇다"].index(q5)) + (1.5 * ["전혀 없다", "가끔 느낀다", "매일 느낀다"].index(q6))
-        
         status = "위험" if total_y >= 5.0 else "주의" if total_y >= 2.5 else "정상"
         sleep_text = {
             "위험_title": "수면위상지연 증후군 및 수면 장애 고위험군 단계입니다.",
@@ -190,11 +207,17 @@ elif st.session_state.current_page == "😴 수면위상지연 증후군":
             "주의": "### 🩺 의학 행동 처방전\n* **🛀 온수 샤워:** 취침 1~2시간 전 따뜻한 물로 샤워하세요.\n* **☕ 카페인 금지:** 오후 2시 이후 고카페인 음료를 금지하세요.",
             "정상": "### 🩺 의학 관리 처방전\n* **🛏️ 쾌적한 환경:** 침실 온도를 서늘하게 유지하고 빛을 완전히 차단하세요.\n* **🏃 낮 시간 활동:** 낮 동안 30분씩 가벼운 운동을 하면 숙면에 도움이 됩니다."
         }
-        render_result(total_y, status, sleep_text, {"💻 VDT 증후군 검사해보기": "💻 VDT 증후군", "🧠 스트레스 검사해보기": "🧠 스트레스 및 가면 우울", "🏠 홈 화면으로 돌아가기": "🏠 홈화면"})
+        st.session_state.result_data = {
+            "total_y": total_y, "status": status, "prescription_text": sleep_text,
+            "nav_targets": {"💻 VDT 증후군 검사": "💻 VDT 증후군", "🧠 스트레스 검사": "🧠 스트레스 및 가면 우울", "🏠 홈 화면으로": "🏠 홈화면"}
+        }
+        st.session_state.show_result = True
+
+    render_result()
 
 # --- 🧠 스트레스 및 가면 우울 ---
 elif st.session_state.current_page == "🧠 스트레스 및 가면 우울":
-    st.title("🧠 학업 스트레스 AI 예측 모델")
+    st.title("🧠 학업 스트레스 및 가면 우울증 AI 예측 모델")
     st.write("청소년기 대인관계 및 성적 압박으로 인한 스트레스 수치를 정밀 진단합니다.")
     st.markdown("---")
 
@@ -204,7 +227,6 @@ elif st.session_state.current_page == "🧠 스트레스 및 가면 우울":
 
     if st.button("정신 건강 AI 정밀 진단", use_container_width=True):
         total_y = (1.2 * ["전혀 없다", "보통이다", "매우 심하다"].index(q7)) + (1.3 * ["전혀 없다", "가끔 그렇다", "자주 그렇다"].index(q8)) + (1.8 * ["전혀 없다", "가끔 그렇다", "자주 그렇다"].index(q9))
-        
         status = "위험" if total_y >= 5.0 else "주의" if total_y >= 2.5 else "정상"
         stress_text = {
             "위험_title": "심리적 스트레스 과부하 및 가면 우울증 고위험군 단계입니다.",
@@ -214,5 +236,10 @@ elif st.session_state.current_page == "🧠 스트레스 및 가면 우울":
             "주의": "### 🩺 심리 행동 처방전\n* **🎨 감정 일기 쓰기:** 답답했던 감정을 마음껏 공책에 적어 털어내 보세요.\n* **🧍 나만의 루틴:** 일주일에 한 번은 내가 좋아하는 취미에 몰두하는 시간을 가지세요.",
             "정상": "### 🩺 심리 관리 처방전\n* **🙏 감사 명상:** 긍정적인 생각 회로 유지를 위해 매일 밤 가벼운 명상을 하세요.\n* **🤝 원활한 소통:** 친구나 가족들과 깊은 이야기를 나누며 끈끈한 유대를 유지하세요."
         }
-        render_result(total_y, status, stress_text, {"💻 VDT 증후군 검사해보기": "💻 VDT 증후군", "😴 수면 장애 검사해보기": "😴 수면위상지연 증후군", "🏠 홈 화면으로 돌아가기": "🏠 홈화면"})
+        st.session_state.result_data = {
+            "total_y": total_y, "status": status, "prescription_text": stress_text,
+            "nav_targets": {"💻 VDT 증후군 검사": "💻 VDT 증후군", "😴 수면 장애 검사": "😴 수면위상지연 증후군", "🏠 홈 화면으로": "🏠 홈화면"}
+        }
+        st.session_state.show_result = True
 
+    render_result()
